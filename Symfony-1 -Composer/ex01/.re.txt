@@ -1,0 +1,27 @@
+Exercice 01 : Spécifier les versions
+
+Répertoire de rendu : ex01/
+Fichiers à rendre : les fichiers et dossiers de votre application
+Fonctions autorisées : toutes les méthodes sont autorisées
+
+Cet exercice comporte plusieurs sous-tâches. Pour chacune d’entre elles, vous devez créer un nouveau fichier Composer.
+
+Pour cet exercice, vous devez installer différentes versions du package Monolog en utilisant Composer.
+
+Les exigences sont les suivantes :
+
+La version 2.3.0
+
+Une version strictement supérieure à 2.2.0 et inférieure ou égale à 2.3.5
+
+Une version comprise entre 2.1.0 et 2.2.0
+
+Une version supérieure ou égale à 2.9.0 et strictement inférieure à 2.9.2
+
+Une version strictement supérieure à 2.0.0 et strictement inférieure à 2.3.5
+
+Indication
+
+Pour résoudre ces exercices, vous devez utiliser la commande :
+
+composer install
