@@ -27,7 +27,7 @@
 
 $contenu = file_get_contents("ex01.txt");
 
-//$contenu = str_replace(",", "\n", $contenu);   
+$contenu = str_replace(",", "\n", $contenu);
 
 echo $contenu;
 
