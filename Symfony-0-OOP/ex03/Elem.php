@@ -2,12 +2,14 @@
 
 class Elem
 {
-    private string $element;
-    private string $content;
+    
     private array $children = [];
 
-    public function __construct(string $element, string $content = "")
-    {
+   public function __construct(
+        private string $element,
+        private string $content = "",
+       
+    ) {
         $allowed = [
             "meta", "img", "hr", "br", "html", "head",
             "body", "title", "h1", "h2", "h3", "h4",
@@ -18,8 +20,7 @@ class Elem
             throw new Exception("Balise HTML invalide");
         }
 
-        $this->element = $element;
-        $this->content = $content;
+        
     }
 
     public function pushElement(Elem $elem): void
@@ -30,7 +31,6 @@ class Elem
     public function getHTML(): string
     {
         $html = "<{$this->element}>";
-
         $html .= $this->content;
 
         foreach ($this->children as $child) {

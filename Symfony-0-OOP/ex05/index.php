@@ -1,28 +1,50 @@
 <?php
 
-include('./MyException.php');
-include('./Elem.php');
+include_once('./MyException.php');
+include_once('./Elem.php');
+include_once('./TemplateEngine.php');
 
+try {
+    // test page valide 
+    $htmlValid = new Elem("html");
+    
+    $head = new Elem("head");
+    $head->pushElement(new Elem("title", "Titre valide"));
+    $head->pushElement(new Elem("meta", "", ["charset" => "utf-8"]));
 
-// 1. Créer une page HTML correcte
-$html = new Elem("html");
+    $body = new Elem("body");
+    $body->pushElement(new Elem("h1", "Bonjour"));
+    $body->pushElement(new Elem("p", "Paragraphe sans balise"));
 
-$head = new Elem("head");
-$head->pushElement(new Elem("title", "Ma page"));
-//$head->pushElement(new Elem("meta", "", ["charset" => "UTF-8"]));
+    $ul = new Elem("ul");
+    $ul->pushElement(new Elem("li", "Item 1"));
+    $body->pushElement($ul);
 
-$body = new Elem("body");
-$body->pushElement(new Elem("h1", "Bienvenue"));
-$body->pushElement(new Elem("p", "Texte simple"));
+    $htmlValid->pushElement($head);
+    $htmlValid->pushElement($body);
 
-$html->pushElement($head);
-$html->pushElement($body);
+    echo "Test Page Valide : " . ($htmlValid->validPage() ? "OK (True)" : "KO (False)") . "\n";
 
-// 2. Tester validPage()
-if ($html->validPage()) {
-    echo "Page VALIDE 👍";
-} else {
-    echo "Page INVALIDE ❌";
+    // --- test page invalide 
+    $pInvalid = new Elem("p");
+    $pInvalid->pushElement(new Elem("span", "Erreur"));
+
+    $bodyInvalid = new Elem("body");
+    $bodyInvalid->pushElement($pInvalid);
+
+    $htmlInvalid = new Elem("html");
+    $htmlInvalid->pushElement($head);
+    $htmlInvalid->pushElement($bodyInvalid);
+
+    echo "Test Page Invalide (balise dans p) : " . (!$htmlInvalid->validPage() ? "OK (False)" : "KO (True)") . "\n";
+
+    // si le fichier est valdie genere
+    if ($htmlValid->validPage()) {
+        $template = new TemplateEngine($htmlValid);
+        $template->createFile("index.html");
+        echo "Fichier index.html généré avec succès.\n";
+    }
+
+} catch (MyException $e) {
+    echo "Erreur : " . $e->getMessage() . "\n";
 }
-
-?>

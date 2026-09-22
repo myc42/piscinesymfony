@@ -2,12 +2,9 @@
 
 class TemplateEngine
 {
-    private Elem $elem;
-
-    public function __construct(Elem $elem)
-    {
-        $this->elem = $elem;
-    }
+    public function __construct(
+        private Elem $elem
+    ) {}
 
     public function createFile(string $fileName)
     {
@@ -16,5 +13,3 @@ class TemplateEngine
         return file_put_contents($fileName, $html);
     }
 }
-
-?>

@@ -2,19 +2,12 @@
 
 class TemplateEngine
 {
-    private Elem $elem;
+    public function __construct(
+        private Elem $elem
+    ) {}
 
-    public function __construct(Elem $elem)
+    public function createFile(string $fileName): int|false
     {
-        $this->elem = $elem;
-    }
-
-    public function createFile(string $fileName)
-    {
-        $html = $this->elem->getHTML();
-
-        return file_put_contents($fileName, $html);
+        return file_put_contents($fileName, $this->elem->getHTML());
     }
 }
-
-?>

@@ -2,42 +2,39 @@
 
 class Elem
 {
-    private string $element;
-    private string $content;
     private array $children = [];
-    private array $attribus = [];
 
-    public function __construct(string $element, string $content = "", array $attribus = [])
-    {
+    public function __construct(
+        private string $element,
+        private string $content = "",
+        private array $attributes = []
+    ) {
         $allowed = [
             "meta", "img", "hr", "br", "html", "head",
             "body", "title", "h1", "h2", "h3", "h4",
-            "h5", "h6", "p", "span", "div" ,  "table", "tr" , "th" , "td", "ul","ol", "li" ,
+            "h5", "h6", "p", "span", "div",
+            "table", "tr", "th", "td", "ul", "ol", "li"
         ];
 
-        if (!in_array($element, $allowed)) {
-             throw new MyException("Balise HTML invalide : " . $element);
+        if (!in_array($this->element, $allowed)) {
+            throw new MyException("Balise HTML invalide");
         }
-
-        $this->element = $element;
-        $this->content = $content;
-        $this->attribus = $attribus;
     }
 
     public function pushElement(Elem $elem): void
     {
         $this->children[] = $elem;
     }
+
     public function getHTML(): string
     {
         $html = "<{$this->element}";
 
-        foreach ($this->attribus as $key => $value) {
-            $html .= " $key=\"$value\"";
+        foreach ($this->attributes as $key => $value) {
+            $html .= " {$key}=\"{$value}\"";
         }
 
         $html .= ">";
-
         $html .= $this->content;
 
         foreach ($this->children as $child) {
@@ -50,94 +47,74 @@ class Elem
     }
 
 
-      
-        public function validPage(): bool
-        {
-            // 1. Racine doit être html
-            if ($this->element !== "html") {
-                return false;
-            }
-
-            // 2. Doit contenir exactement head + body
+    public function validPage(): bool
+    {
+        if ($this->element === 'html') {
             if (count($this->children) !== 2) {
                 return false;
             }
+            if ($this->children[0]->element !== 'head' || $this->children[1]->element !== 'body') {
+                return false;
+            }
+        }
 
-            $head = null;
-            $body = null;
+        if ($this->element === 'head') {
+            $titleCount = 0;
+            $metaCharsetCount = 0;
 
             foreach ($this->children as $child) {
-                if ($child->element === "head") {
-                    $head = $child;
-                } elseif ($child->element === "body") {
-                    $body = $child;
-                } else {
-                    return false;
-                }
-            }
-
-            if (!$head || !$body) {
-                return false;
-            }
-
-            // 3. HEAD validation
-            $titleCount = 0;
-            $metaCount = 0;
-
-            foreach ($head->children as $child) {
-                if ($child->element === "title") {
+                if ($child->element === 'title') {
                     $titleCount++;
-                } elseif ($child->element === "meta") {
-                    $metaCount++;
-                } else {
-                    return false;
+                }
+                if ($child->element === 'meta' && isset($child->attributes['charset'])) {
+                    $metaCharsetCount++;
                 }
             }
 
-            if ($titleCount !== 1 || $metaCount !== 1) {
+            if ($titleCount !== 1 || $metaCharsetCount !== 1 || count($this->children) !== 2) {
                 return false;
             }
+        }
 
-            // 4. BODY validation (tout ici directement)
-            foreach ($body->children as $child) {
+    
+        if ($this->element === 'p' && !empty($this->children)) {
+            return false;
+        }
 
-                // p = texte uniquement
-                if ($child->element === "p") {
-                    if (!empty($child->children)) {
-                        return false;
-                    }
-                }
 
-                // ul / ol = uniquement li
-                elseif ($child->element === "ul" || $child->element === "ol") {
-                    foreach ($child->children as $li) {
-                        if ($li->element !== "li") {
-                            return false;
-                        }
-                    }
-                }
-
-                // table rules
-                elseif ($child->element === "table") {
-                    foreach ($child->children as $tr) {
-                        if ($tr->element !== "tr") {
-                            return false;
-                        }
-
-                        foreach ($tr->children as $cell) {
-                            if ($cell->element !== "td" && $cell->element !== "th") {
-                                return false;
-                            }
-                        }
-                    }
-                }
-
-                // head interdit dans body
-                elseif ($child->element === "head") {
+        if ($this->element === 'table') {
+            foreach ($this->children as $child) {
+                if ($child->element !== 'tr') {
                     return false;
                 }
             }
-
-            return true;
         }
+
+        if ($this->element === 'tr') {
+            foreach ($this->children as $child) {
+                if ($child->element !== 'th' && $child->element !== 'td') {
+                    return false;
+                }
+            }
+        }
+
+   
+        if ($this->element === 'ul' || $this->element === 'ol') {
+            foreach ($this->children as $child) {
+                if ($child->element !== 'li') {
+                    return false;
+                }
+            }
+        }
+
+  
+        foreach ($this->children as $child) {
+            if (!$child->validPage()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }

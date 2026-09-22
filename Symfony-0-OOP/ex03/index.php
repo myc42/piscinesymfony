@@ -26,5 +26,3 @@ $template = new TemplateEngine($html);
 $template->createFile("index.html");
 
 echo "Fichier index.html créé avec succès.";
-
-?>

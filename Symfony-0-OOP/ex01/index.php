@@ -5,8 +5,8 @@ include('./TemplateEngine.php');
 
 $elements = new Text(["aaa", "bbb"]);
 
-$elements->append("ccc");
-$elements->append("ddd");
+$elements->append("a");
+$elements->append("b");
 
 
 $engine = new TemplateEngine();

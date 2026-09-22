@@ -1,8 +1,5 @@
 <?php
 
-    class MyException  extends Exception
-    {
-
-    } ; 
-
-?>
+class MyException extends Exception
+{
+}

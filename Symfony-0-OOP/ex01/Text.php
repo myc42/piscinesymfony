@@ -1,4 +1,5 @@
 <?php
+
 class Text
 {
     private $stockages = [];
