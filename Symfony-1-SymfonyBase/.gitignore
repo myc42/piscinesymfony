@@ -1,0 +1,9 @@
+readme.md
+vendor
+vendor/
+var/
+bin/
+arevoir.txt
+/vendor/
+/var/
+.env.local
