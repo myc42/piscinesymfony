@@ -9,7 +9,5 @@
 
 controllers:
     resource: routing.controllers
-ArticlesController:
-    path: /e01
-    controller: App\Controller\ArticlesController::articles
+
     
