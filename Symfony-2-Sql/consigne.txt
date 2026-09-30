@@ -1,0 +1,37 @@
+## Chapitre I : Avant-propos
+
+L'une des tâches les plus courantes et les plus difficiles pour tout type d'application consiste à persister et lire des informations vers et depuis une base de données. Bien que le framework Symfony n'intègre aucun composant natif pour interagir directement avec les bases de données, il offre une intégration très poussée avec une bibliothèque tierce appelée Doctrine. Le seul et unique objectif de Doctrine est de vous fournir des outils puissants pour rendre les interactions avec la base de données simples et flexibles.
+
+---
+
+## Chapitre II : Consignes générales
+
+* Votre projet doit être réalisé dans une machine virtuelle.
+* Votre machine virtuelle doit contenir tous les logiciels nécessaires pour mener à bien votre projet. Ces logiciels doivent être correctement configurés et installés.
+* Vous êtes libre de choisir le système d'exploitation à utiliser pour votre machine virtuelle.
+* Vous devez être en mesure d'utiliser votre machine virtuelle depuis un poste du cluster.
+* Vous devez configurer un dossier partagé entre votre machine virtuelle et votre machine hôte.
+* Lors de vos évaluations, vous utiliserez ce dossier partagé pour effectuer la synchronisation avec votre dépôt git.
+* Vos fonctions ne doivent pas quitter de manière inattendue (erreur de segmentation, erreur de bus, double libération de mémoire, etc.), à l'exception des comportements indéfinis. Si cela se produit, votre projet sera considéré comme non fonctionnel et recevra la note de 0 lors de l'évaluation.
+* Nous vous encourageons à créer des programmes de test pour votre projet, même si ces travaux n'ont pas à être rendus et ne seront pas notés. Cela vous donnera l'opportunité de tester facilement votre travail ainsi que celui de vos pairs. Ces tests vous seront particulièrement utiles lors de votre soutenance. En effet, durant l'évaluation, vous êtes libre d'utiliser vos propres tests et/ou ceux du pair que vous évaluez.
+* Rendu : vous devez soumettre votre travail sur le dépôt git qui vous a été attribué. Seul le travail présent sur ce dépôt sera évalué. Si Deepthought est chargé de corriger votre travail, cette correction aura lieu après vos évaluations entre pairs. Si une erreur survient dans n'importe quelle section de votre projet durant le passage de Deepthought, l'évaluation s'arrêtera immédiatement.
+
+---
+
+## Chapitre III : Consignes spécifiques du jour
+
+* Utilisez à la fois des annotations et des fichiers de configuration pour définir vos routes.
+* Utilisez des types de formulaires définis directement dans vos contrôleurs (*controller-defined form types*).
+* Chaque page affichée doit être correctement structurée et contenir un DocType, ainsi que les balises HTML de base telles que `<html>`, `<body>` et `<head>`.
+* Le serveur web à utiliser pour cette journée est le serveur intégré de Symfony. Il doit être démarré et arrêté uniquement à l'aide des commandes de la console Symfony.
+* Seules les URL de requête explicites doivent afficher une page sans erreur. Les URL non configurées doivent impérativement générer une erreur 404.
+* Les URL demandées doivent fonctionner avec et sans le slash final (ex. : `/ex00` et `/ex00/` doivent toutes deux fonctionner).
+* Pour résoudre chaque exercice, vous devrez utiliser exclusivement du SQL, exclusivement l'ORM, ou une combinaison des deux selon la consigne. Si cette condition n'est pas respectée, aucun point ne sera attribué à votre solution.
+* Chaque exercice doit disposer de sa propre table dédiée dans la base de données.
+* Le nommage des tables en base de données doit être explicite et approprié. Par exemple : si vous créez une table pour un modèle nommé `Person`, la table correspondante doit s'appeler `persons`.
+
+Sauf mention contraire explicitement spécifiée dans le sujet, vous devez vous appuyer sur les versions de langages suivantes :
+
+* **PHP** : Symfony LTS
+* **HTML 5**
+* **CSS 3**

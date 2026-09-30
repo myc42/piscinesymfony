@@ -1,0 +1,15 @@
+
+# Dépendances et cache
+vendor/
+var/
+node_modules/
+
+# Fichiers d'environnement réels (on garde seulement les *_exemple.txt)
+.env
+.env.dev
+.env.local
+.env.*.local
+# Divers
+.idea/
+.vscode/
+.DS_Store
