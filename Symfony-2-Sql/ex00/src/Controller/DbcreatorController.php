@@ -19,7 +19,7 @@ final class DbcreatorController extends AbstractController
         ]);
     }
 
-    #[Route('/db-creator', methods: ['POST'], name: 'app_db')]
+    #[Route('/db-creator', name: 'app_db')]
     public function db(): Response
     {
         try {
@@ -28,13 +28,13 @@ final class DbcreatorController extends AbstractController
             return new Response('Erreur : ' . $e->getMessage());
         }
 
-        $createdb = $pdo->exec('CREATE DATABASE IF NOT EXISTS ma_base');
+        $createdb = $pdo->exec('CREATE DATABASE IF NOT EXISTS ex00');
 
         if ($createdb === false) {
             return new Response('Erreur : la base de données n\'a pas pu être créée.');
         }
 
-        $pdo->exec('USE ma_base');
+        $pdo->exec('USE ex00');
 
         try {
             $createtable = $pdo->exec('CREATE TABLE IF NOT EXISTS users (

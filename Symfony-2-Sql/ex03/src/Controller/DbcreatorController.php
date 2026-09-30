@@ -29,14 +29,11 @@ final class DbcreatorController extends AbstractController
             
                 if ($UserRepository->existsByEmailOrUsername($email, $username)) {
                      return $this->redirectToRoute('app_dbcreator');
-
                 }
                 $EntityManagerInterface->persist($user);
                 $EntityManagerInterface->flush();
                 return $this->redirectToRoute('app_dbcreator');
             }
-
-
 
         return $this->render('dbcreator/index.html.twig', [
             'controller_name' => 'DbcreatorController',
@@ -44,7 +41,7 @@ final class DbcreatorController extends AbstractController
         ]);
     }
 
-    #[Route('/show', methods: ['POST'],  name: 'app_show')]
+    #[Route('/show',  name: 'app_show')]
     public function show(UserRepository $userRepository): Response
     {
         $users = $userRepository->findAll();

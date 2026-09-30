@@ -112,7 +112,7 @@ if ($userExists) {
         ]);
     }
 
-    #[Route('/allusers',  methods : ['POST'], name: 'app_db'  )]
+    #[Route('/allusers', name: 'app_db'  )]
     public function db(): Response
     {
                      try {

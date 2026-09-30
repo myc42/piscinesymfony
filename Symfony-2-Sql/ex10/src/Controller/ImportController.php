@@ -38,7 +38,7 @@ public function index(
         $this->connection->executeStatement($sql);
     } catch (\Exception $e) {
         // Affiche l'erreur si la création échoue
-        dd($e->getMessage()); 
+      //  dd($e->getMessage()); 
     }
 
     $file = $this->getParameter('users_file');
