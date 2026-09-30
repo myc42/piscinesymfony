@@ -1,0 +1,4 @@
+
+###> symfony/framework-bundle ###
+APP_SECRET=594d180d2d9e56cf6c4d7e5d0f80fe20
+###< symfony/framework-bundle ###

@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des employés{% endblock %}
+
+{% block body %}
+    <h1>Employés</h1>
+
+    <p><a href="{{ path('app_new') }}">+ Créer un employé</a></p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Naissance</th>
+                <th>Actif</th>
+                <th>Embauché le</th>
+                <th>Jusqu'au</th>
+                <th>Heures</th>
+                <th>Salaire</th>
+                <th>Poste</th>
+                <th>Manager</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for employee in employees %}
+            <tr>
+                <td>{{ employee.id }}</td>
+                <td>{{ employee.firstname }} {{ employee.lastname }}</td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.birthdate|date('d/m/Y') }}</td>
+                <td>{{ employee.active ? 'Oui' : 'Non' }}</td>
+                <td>{{ employee.employedSince|date('d/m/Y') }}</td>
+                <td>{{ employee.employedUntil ? employee.employedUntil|date('d/m/Y') : '—' }}</td>
+                <td>{{ employee.hours.value }}</td>
+                <td>{{ employee.position.value }}</td>
+                <td>
+                    {% if employee.manager %}
+                        {{ employee.manager.firstname }} {{ employee.manager.lastname }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td class="actions">
+                    <a href="{{ path('app_edit', {id: employee.id}) }}">Modifier</a>
+                  <form method="post" action="{{ path('app_delete', {id: employee.id}) }}"
+      onsubmit="return confirm('Supprimer cet employé ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ employee.id) }}">
+    <button type="submit">Supprimer</button>
+</form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">Aucun employé pour le moment.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

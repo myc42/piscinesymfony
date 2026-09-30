@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des personnes{% endblock %}
+
+{% block body %}
+
+<div class="container mt-4">
+
+    <h1>Liste des personnes</h1>
+
+    {% for person in persons %}
+
+        <div class="card mb-3">
+            <div class="card-body">
+
+                <div>
+                    <strong>ID :</strong> {{ person.id }}
+                </div>
+
+                <div>
+                    <strong>Nom :</strong> {{ person.name }}
+                    | <strong>Email :</strong> {{ person.email }}
+                </div>
+
+                <div>
+                    <strong>Compte bancaire :</strong>
+
+                    {% set hasAccount = false %}
+
+                    {% for account in accounts %}
+                        {% if account.personId == person %}
+                            {% set hasAccount = true %}
+                            {{ account.iban }}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if not hasAccount %}
+                        Aucun compte bancaire
+                    {% endif %}
+                </div>
+
+                <div>
+                    <strong>Adresses :</strong>
+
+                    {% set hasAddress = false %}
+
+                    {% for address in addresses %}
+                        {% if address.person == person %}
+                            {% set hasAddress = true %}
+                            {{ address.street }}{% if not loop.last %}, {% endif %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if not hasAddress %}
+                        Aucune adresse
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+    {% else %}
+
+        <p>Aucune personne trouvée.</p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}

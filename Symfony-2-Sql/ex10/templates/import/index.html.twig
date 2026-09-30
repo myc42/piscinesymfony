@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ImportController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+     <h1>Contenu du fichier</h1>
+
+   <h1>Utilisateurs</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Age</th>
+            <th>Ville</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.name }}</td>
+                <td>{{ user.age }}</td>
+                <td>{{ user.city }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</div>
+{% endblock %}

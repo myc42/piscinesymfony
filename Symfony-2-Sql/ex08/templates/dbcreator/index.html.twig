@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello DbcreatorController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+
+<h1>Exercice 08 : Gestion SQL Directe</h1>
+    <p class="text-muted">Cliquez sur les étapes ci-dessous pour exécuter les requêtes SQL correspondantes.</p>
+<a href="{{ path('app_db') }}" class="list-group-item list-group-item-action">
+            <strong>1. Créer la table <code>persons</code></strong>
+            <br>
+            <small class="text-muted">Crée la table initiale sans le champ address.</small>
+        </a>
+<a href="{{ path('app_alter_marital') }}" class="list-group-item list-group-item-action">
+            <strong>2. Ajouter la colonne <code>marital_status</code></strong>
+            <br>
+            <small class="text-muted">Exécute l'ALTER TABLE pour ajouter l'ENUM(single, married, widower).</small>
+        </a>
+
+        <a href="{{ path('app_create_tables') }}" class="list-group-item list-group-item-action">
+            <strong>3. Créer les tables <code>addresses</code> et <code>bank_accounts</code></strong>
+            <br>
+            <small class="text-muted">Génère les deux nouvelles tables en SQL pur.</small>
+        </a>
+
+        <a href="{{ path('app_create_relations') }}" class="list-group-item list-group-item-action">
+            <strong>4. Créer les relations (Foreign Keys)</strong>
+            <br>
+            <small class="text-muted">Ajoute la relation 1:1 (bank_accounts) et 1:N (addresses).</small>
+        </a>
+
+        
+</div>
+{% endblock %}

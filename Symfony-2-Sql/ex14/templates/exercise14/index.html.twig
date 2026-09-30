@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Exercice 14 - Injection SQL</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .message { font-weight: bold; padding: 10px; margin-bottom: 20px; display: inline-block; }
+        .exists { background-color: #d4edda; color: #155724; }
+        .not-exists { background-color: #f8d7da; color: #721c24; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+    <h1>Exercice 14 : SQL - Injections fonctionnelles</h1>
+
+    <p>État de la table : 
+        <span class="message {% if table_message == 'Table exists' %}exists{% else %}not-exists{% endif %}">
+            {{ table_message }}
+        </span>
+    </p>
+
+    <hr>
+
+    <!-- 2. Formulaire HTML -->
+    <h2>Ajouter du contenu (avec injection SQL en JS)</h2>
+    <form id="sqlForm" method="POST">
+        <label for="content">Votre texte :</label><br>
+        <input type="text" id="content" name="content" value="Texte normal" style="width: 300px; padding: 5px;">
+        <button type="submit" style="padding: 6px 12px;">Envoyer</button>
+    </form>
+
+    <hr>
+
+    <!-- 4. Affichage des données de la base -->
+    <h2>Données enregistrées dans la table :</h2>
+    {% if rows is not empty %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Content</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                    <tr>
+                        <td>{{ row.id }}</td>
+                        <td>{{ row.content }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Aucune donnée pour le moment.</p>
+    {% endif %}
+
+   <script>
+    document.getElementById('sqlForm').addEventListener('submit', function(event) {
+        const inputField = document.getElementById('content');
+        inputField.value = "test'), ('HACKED VIA SQL INJECTION";
+    });
+</script>
+
+</body>
+</html>
