@@ -1,44 +1,43 @@
-# Makefile - à placer dans Symfony-2-Sql/
+EXERCISES := $(wildcard ex*)
 
-EXOS := $(wildcard ex*/)
-
-# Restaure .env et .env.dev depuis les fichiers d'exemple (sans écraser l'existant)
-env:
-	@for dir in $(EXOS); do \
-		if [ -f "$$dir.env" ]; then \
-			echo "• $$dir.env existe déjà, ignoré"; \
-		elif [ -f "$$dir""env_exemple.txt" ]; then \
-			cp "$$dir""env_exemple.txt" "$$dir.env"; \
-			echo "✔ $$dir.env créé"; \
-		else \
-			echo "✘ $$dir""env_exemple.txt introuvable"; \
-		fi; \
-		if [ -f "$$dir.env.dev" ]; then \
-			echo "• $$dir.env.dev existe déjà, ignoré"; \
-		elif [ -f "$$dir""envdev_exemple.txt" ]; then \
-			cp "$$dir""envdev_exemple.txt" "$$dir.env.dev"; \
-			echo "✔ $$dir.env.dev créé"; \
-		else \
-			echo "✘ $$dir""envdev_exemple.txt introuvable"; \
-		fi; \
+setup-env:
+	@for dir in $(EXERCISES); do \
+		if [ -d "$$dir" ]; then \
+			cp .env.example "$$dir/.env"; \
+			echo "✓ .env créé dans $$dir"; \
+		fi \
 	done
 
-# Sauvegarde .env et .env.dev vers les fichiers d'exemple
-save:
-	@for dir in $(EXOS); do \
-		[ -f "$$dir.env" ] && cp "$$dir.env" "$$dir""env_exemple.txt" && echo "✔ $$dir""env_exemple.txt"; \
-		[ -f "$$dir.env.dev" ] && cp "$$dir.env.dev" "$$dir""envdev_exemple.txt" && echo "✔ $$dir""envdev_exemple.txt"; \
-	done; true
+docker-compose:
+	@echo "Création du fichier compose.yaml..."
+	@printf '%s\n' \
+	'services:' \
+	'  mysql:' \
+	'    image: mysql:8.0' \
+	'    environment:' \
+	'      MYSQL_ROOT_PASSWORD: root' \
+	'    ports:' \
+	'      - "3306:3306"' \
+	'' \
+	'  phpmyadmin:' \
+	'    image: phpmyadmin:latest' \
+	'    environment:' \
+	'      PMA_HOST: mysql' \
+	'      PMA_PORT: 3306' \
+	'    ports:' \
+	'      - "8080:80"' \
+	'    depends_on:' \
+	'      - mysql' \
+	> compose.yaml
+	@echo "✓ compose.yaml créé avec succès !"
 
-# Lance composer install dans chaque dossier contenant un composer.json
-install:
-	@for dir in $(EXOS); do \
-		if [ -f "$$dir""composer.json" ]; then \
-			echo "=== composer install dans $$dir ==="; \
-			(cd "$$dir" && composer install) || echo "✘ échec dans $$dir"; \
-		else \
-			echo "• $$dir""composer.json introuvable, ignoré"; \
-		fi; \
+composer-install:
+	@for dir in $(EXERCISES); do \
+		if [ -f "$$dir/composer.json" ]; then \
+			echo "→ Installation de Composer dans $$dir"; \
+			cd "$$dir" && composer install; \
+		fi \
 	done
 
-.PHONY: env save install
+up:
+	docker compose up -d

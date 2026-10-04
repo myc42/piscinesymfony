@@ -16,16 +16,26 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('username', TextType::class)
-            ->add('name', TextType::class)
-            ->add('email', EmailType::class)
+            ->add('username', TextType::class, [
+                'data' => 'admin',
+            ])
+            ->add('name', TextType::class, [
+                'data' => 'Jean Dupont',
+            ])
+            ->add('email', EmailType::class, [
+                'data' => 'jean@example.com',
+            ])
             ->add('enable', CheckboxType::class, [
                 'required' => false,
+                'data' => true,
             ])
             ->add('birthdate', DateTimeType::class, [
                 'widget' => 'single_text',
+                'data' => new \DateTime('2000-01-01'),
             ])
-            ->add('adresse', TextareaType::class);
+            ->add('adresse', TextareaType::class, [
+                'data' => 'Paris',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

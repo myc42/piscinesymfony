@@ -13,7 +13,7 @@ final class Exercise14Controller extends AbstractController
     #[Route('/', name: 'app_exercise14')]
     public function index(Request $request, Connection $connection): Response
     {
-        $tableName = 'evvvvvv';
+        $tableName = 'table14';
         $schemaManager = $connection->createSchemaManager();
         $tables = $schemaManager->listTableNames();
 

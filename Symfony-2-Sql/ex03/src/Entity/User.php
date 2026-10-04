@@ -14,22 +14,22 @@ class User
     private ?int $id = null;
 
     #[ORM\Column(length: 255, unique : true)]
-    private ?string $username = null;
+    private ?string $username = 'admin';
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private ?string $name = 'jean dupont';
 
     #[ORM\Column(length: 255 , unique : true)]
-    private ?string $email = null;
+    private ?string $email = 'jean@ex.com';
 
     #[ORM\Column]
-    private ?bool $enable = null;
+    private ?bool $enable = true;
 
     #[ORM\Column]
     private ?\DateTime $birthdate = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $adress = null;
+    private ?string $adress = 'paris';
 
     public function getId(): ?int
     {

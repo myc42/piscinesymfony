@@ -18,19 +18,19 @@ class Employee
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $firstname = null;
+    private ?string $firstname = 'jean';
 
     #[ORM\Column(length: 255)]
-    private ?string $lastname = null;
+    private ?string $lastname = 'dupont';
 
     #[ORM\Column(length: 255, unique: true)]
-    private ?string $email = null;
+    private ?string $email = 'jdp@gmail.com';
 
     #[ORM\Column]
     private ?\DateTime $birthdate = null;
 
     #[ORM\Column]
-    private ?bool $active = null;
+    private ?bool $active = true;
 
     #[ORM\Column]
     private ?\DateTime $employed_since = null;

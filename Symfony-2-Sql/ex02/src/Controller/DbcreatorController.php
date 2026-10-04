@@ -1,141 +1,98 @@
 <?php
-
 namespace App\Controller;
 
+use App\Form\UserType;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception as DBALException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\Request;
-use App\Form\UserType;
-use PDO;
-
 
 
 final class DbcreatorController extends AbstractController
 {
+    public function __construct(
+        private Connection $connection
+    ) {}
+
     #[Route('/', name: 'app_dbcreator')]
     public function index(Request $request): Response
     {
+        $form = $this->createForm(UserType::class);
+        $form->handleRequest($request);
 
-            $form = $this->createForm(UserType::class);
-            $form->handleRequest($request);
-             if ($form->isSubmitted() && $form->isValid()) 
-             {
-                        try {
-                                $pdo = new PDO('mysql:host=127.0.0.1;port=8889','root', 'root' );
-                        }
-                        catch (PDOException $e) 
-                            {
-                                    return new Response('Erreur : ' . $e->getMessage());
-                            }
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                // 1. Création et sélection de la BDD
+                $this->connection->executeStatement('CREATE DATABASE IF NOT EXISTS ex02');
+                $this->connection->executeStatement('USE ex02');
 
-                        $createdb = $pdo->exec('CREATE DATABASE IF NOT EXISTS ex02') ;
-                        if ($createdb === false) 
-                        {
-                                echo "Erreur : la base de données n'a pas pu être créée.";           // problème
+                // 2. Création de la table
+                $this->connection->executeStatement('
+                    CREATE TABLE IF NOT EXISTS users (
+                        id INT AUTO_INCREMENT PRIMARY KEY,
+                        username VARCHAR(255) UNIQUE,
+                        name VARCHAR(255),
+                        email VARCHAR(255) UNIQUE,
+                        enable TINYINT(1) DEFAULT 1,
+                        birthdate DATETIME,
+                        adresse LONGTEXT
+                    )
+                ');
 
-                        }
-                        try {
-                                $pdo->exec('USE ex02');
+                $data = $form->getData();
 
-                                $createtable = $pdo->exec('CREATE TABLE IF NOT EXISTS users (
-                                    id INT AUTO_INCREMENT PRIMARY KEY,
-                                    username VARCHAR(255) UNIQUE,
-                                    name VARCHAR(255),
-                                    email VARCHAR(255) UNIQUE,
-                                    enable TINYINT(1) DEFAULT 1,
-                                    birthdate DATETIME,
-                                    adresse LONGTEXT
-                                ) ') ;
-                    } catch (PDOException $e) 
-                    {
-                                echo "Erreur lors de la création de la table : " . $e->getMessage();
-                    }
+                // 3. Vérification de l'existence de l'utilisateur
+                $userExists = $this->connection->fetchOne(
+                    'SELECT id FROM users WHERE username = :username OR email = :email',
+                    [
+                        'username' => $data['username'],
+                        'email'    => $data['email'],
+                    ]
+                );
 
-                    if ($createtable === false) 
-                    {
-                                            // problème
+                if ($userExists !== false) {
+                    return new Response('Le username ou l\'email existe déjà.');
+                }
 
-                    }
-                    
-                     $data = $form->getData();
-                     $username = $data['username'];
-                        $name = $data['name'];
-                        $email = $data['email'];
-                        $enable = $data['enable'];
-                        $birthdate = $data['birthdate'];
-                        $adresse = $data['adresse'];
-                            // Requête SQL
+                // 4. Insertion en base de données
+                $this->connection->insert('users', [
+                    'username'  => $data['username'],
+                    'name'      => $data['name'],
+                    'email'     => $data['email'],
+                    'enable'    => $data['enable'] ? 1 : 0,
+                    'birthdate' => $data['birthdate'] ? $data['birthdate']->format('Y-m-d H:i:s') : null,
+                    'adresse'   => $data['adresse'],
+                ]);
 
+            } catch (DBALException $e) {
+                return new Response('Erreur DBAL : ' . $e->getMessage());
+            }
+        }
 
-                            $sql = "SELECT id FROM users
-        WHERE username = :username
-        OR email = :email";
-
-$stmt = $pdo->prepare($sql);
-
-$stmt->execute([
-    'username' => $username,
-    'email' => $email,
-]);
-
-$userExists = $stmt->fetch();
-
-if ($userExists) {
-    return new Response('Le username ou l\'email existe déjà.');
-}
-
-                    $sql = "INSERT INTO users
-                    (username, name, email, enable, birthdate, adresse)
-                    VALUES
-                    (:username, :name, :email, :enable, :birthdate, :adresse)";
-
-                    $stmt = $pdo->prepare($sql);
-
-                    
-
-            // Exécution
-            $stmt->execute([
-                'username' => $data['username'],
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'enable' => $data['enable'] ? 1 : 0,
-                'birthdate' => $data['birthdate']->format('Y-m-d H:i:s'),
-                'adresse' => $data['adresse'],
-            ]);
-
-             }
-        
         return $this->render('dbcreator/index.html.twig', [
             'controller_name' => 'DbcreatorController',
-               'form' => $form,
+            'form'            => $form->createView(),
         ]);
     }
 
-    #[Route('/allusers', name: 'app_db'  )]
+    #[Route('/allusers', name: 'app_db')]
     public function db(): Response
     {
-                     try {
-                            $pdo = new PDO('mysql:host=127.0.0.1;port=8889','root', 'root' );
-                      }
-                        catch (PDOException $e) 
-                            {
-                                    return new Response('Erreur : ' . $e->getMessage());
-                            }
-                    $pdo->exec('USE ex02');
+        try {
+            $this->connection->executeStatement('USE ex02');
 
-                        
-            $request = $pdo->query('SELECT * FROM ex02.users');
+            // Récupération de tous les utilisateurs (équivalent à fetchAll(PDO::FETCH_ASSOC))
+            $data = $this->connection->fetchAllAssociative('SELECT * FROM users');
 
-$data = $request->fetchAll(PDO::FETCH_ASSOC);
+        } catch (DBALException $e) {
+            return new Response('Erreur lors de la récupération des données : ' . $e->getMessage());
+        }
 
-        
-            return $this->render('dbcreator/users.html.twig', [
-                                'controller_name' => 'DbcreatorController',
-                                    'data' => $data
-
-                            ]);
-
-        
-            }
+        return $this->render('dbcreator/users.html.twig', [
+            'controller_name' => 'DbcreatorController',
+            'data'            => $data,
+        ]);
+    }
 }

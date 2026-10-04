@@ -15,15 +15,6 @@ use App\Repository\AddressRepository;
 use Symfony\Component\HttpFoundation\Request;
 
 
-
-
-
-
-
-
-
-
-
 final class Ex09Controller extends AbstractController
 {
     #[Route('/', name: 'app_ex09')]

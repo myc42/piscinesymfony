@@ -18,7 +18,7 @@ public function __construct(
         private Connection $connection
     ) {}
 
-   #[Route('/import', name: 'app_import')]
+   #[Route('/', name: 'app_import')]
 public function index(
     EntityManagerInterface $entityManager, 
     UserOrmRepository $userOrmRepository
@@ -70,7 +70,7 @@ public function index(
                 'city' => $city,
             ]);
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            //dd($e->getMessage());
         }
 
         try {
@@ -81,7 +81,7 @@ public function index(
 
             $entityManager->persist($user);
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            //dd($e->getMessage());
         }
     }
 

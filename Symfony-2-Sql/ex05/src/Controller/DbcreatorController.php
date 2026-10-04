@@ -44,7 +44,7 @@ final class DbcreatorController extends AbstractController
         ]);
     }
 
-    #[Route('/show', methods: ['POST'],  name: 'app_show')]
+    #[Route('/show',  name: 'app_show')]
     public function show(UserRepository $UserRepository): Response
     {
         $users = $UserRepository->findAll();
